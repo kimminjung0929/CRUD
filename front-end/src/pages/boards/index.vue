@@ -40,7 +40,7 @@
                 </nav>    
             </div>
             <div>
-                <router-link type="button" class="btn btn-primary btn-sm" to="/board/create">글 작성</router-link>    
+                <router-link type="button" class="btn btn-primary btn-sm" to="/boards/create">글 작성</router-link>    
             </div>
             
         </div>

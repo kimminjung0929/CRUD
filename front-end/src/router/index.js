@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // @는 src를 가리킴
 import Home from '@/pages/index.vue';
 import Boards from '@/pages/boards/index.vue';
-import BoardCreate from '@/pages/boards/create/index.vue'
+import BoardsCreate from '@/pages/boards/create/index.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -18,9 +18,9 @@ const router = createRouter({
             component: Boards
         },
         {
-            path: '/board/create',
+            path: '/boards/create',
             name: 'BoardCreate',
-            component: BoardCreate
+            component: BoardsCreate
         },
     ]
 });
