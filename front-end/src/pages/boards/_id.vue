@@ -1,5 +1,5 @@
 <template>
-  <BoardForm />
+  <BoardForm v-bind:editing="true" />
 </template>
 
 <script>
