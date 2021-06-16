@@ -1,5 +1,6 @@
 <template>
 
+        
         <!-- 게시글 리스트 -->
         <table class="table">
             <thead>
@@ -17,28 +18,30 @@
                 </tr>
             </tbody>
         </table>
+
+        <div v-if="!boards.length" style="color: red">게시글을 작성해 주세요</div>
         
         <hr>
 
         <!-- Pagination , 글 작성 버튼 -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between my-1">
             <div>
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
+                            <a class="page-link" href="#" aria-label="Previous" v-if=" currentPage != 0" @click.stop="getBoards(currentPage - 1)">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
+                            <a class="page-link" href="#" aria-label="Next" v-if=" currentPage != totalPage" @click.stop="getBoards(currentPage + 1)">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
                     </ul>
                 </nav>    
             </div>
+
             <div>
                 <button type="button" class="btn btn-primary btn-sm" @click.stop="moveToCreatePage">글 작성</button>    
             </div>
@@ -56,19 +59,31 @@ export default {
         const boards = ref([]);
         const router = useRouter();
 
+        const totalPage = ref(0); // 끝 페이지
+        const currentPage = ref(0); // 현재 페이지
+        const endPage = ref(0);  // 마지막 페이지
+
         // 페이지 로딩 시 모든 글 가져오기
-        const getBoards = async () => {
-            const res = await axios.get(`/boards`)
-            boards.value = res.data;    
+        const getBoards = async (page = currentPage.value) => {
+            const res = await axios.get(`/boards?page=${page}`)
+            totalPage.value = res.data.totalPage;
+            currentPage.value = Math.max(0, res.data.currentPage);
+            endPage.value = res.data.endPage;
+            boards.value = res.data.boardLists;
+
+            console.log(res.data);
+
+            // boards.value = res.data;    
             
         }
         getBoards();       
+
         
         // delete 버튼 눌러서 글 삭제하기        
         const deleteBoard = async (board_id) => {
             
             await axios.delete(`/boards/${board_id}`);
-            getBoards();
+            getBoards(0);
         }
 
         // 해당 글 상세 페이지 이동
@@ -90,6 +105,9 @@ export default {
 
         return {
             boards,
+            totalPage,
+            currentPage,
+            endPage,
             getBoards,
             deleteBoard,
             moveToPage,

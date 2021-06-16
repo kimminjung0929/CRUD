@@ -1,8 +1,10 @@
 package com.crud.backend.controller;
 
 import com.crud.backend.domain.Board;
+import com.crud.backend.domain.PageResultBoard;
 import com.crud.backend.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +25,18 @@ public class BoardController {
     
     // 전체 데이터 반환
     @GetMapping(value = "")
-    public ResponseEntity<List<Board>> getBoards() {
-        List<Board> results = boardService.findBoards();
-        
-        return new ResponseEntity<>(results, HttpStatus.OK);
+    public ResponseEntity<PageResultBoard> getBoards(@RequestParam(value = "page", defaultValue = "0") int pageNum) {
+
+        PageResultBoard pageResultBoard = boardService.findBoards(pageNum);
+
+
+        return new ResponseEntity<>(pageResultBoard, HttpStatus.OK);
     }
     
     // id 글 반환
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<Board>> getBoard(@PathVariable("id") Long id) {
+
         Optional<Board> result = boardService.findBoardById(id);
 
         return new ResponseEntity<>(result,HttpStatus.OK);
